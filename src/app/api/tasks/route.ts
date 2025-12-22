@@ -5,8 +5,8 @@ export async function GET() {
   return NextResponse.json(taskService.getAll());
 }
 
-export async function POST(req: NextRequest) {
-  const data = await req.json();
+export async function POST(request: NextRequest) {
+  const data = await request.json();
   const result = taskService.create(data);
 
   if ('error' in result) {
