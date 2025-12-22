@@ -8,3 +8,8 @@ export interface Task {
   status: Status;
   labels: Label[];
 }
+
+export interface TaskServiceError {
+  error: string;
+  status?: number;
+}
