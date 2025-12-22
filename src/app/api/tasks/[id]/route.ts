@@ -8,13 +8,13 @@ export async function PUT(
   const { id } = params;
   const data = await request.json();
 
-  const result = taskService.update(id, data);
+  const response = taskService.update(id, data);
 
-  if ('error' in result) {
-    return NextResponse.json({ error: result.error }, { status: 404 });
+  if ('error' in response) {
+    return NextResponse.json({ error: response.error }, { status: 404 });
   }
 
-  return NextResponse.json(result);
+  return NextResponse.json(response);
 }
 
 export async function DELETE(
@@ -23,14 +23,14 @@ export async function DELETE(
 ) {
   const { id } = params;
 
-  const result = taskService.delete(id);
+  const response = taskService.delete(id);
 
-  if ('error' in result) {
+  if ('error' in response) {
     return NextResponse.json(
-      { error: result.error },
-      { status: result.status ?? 400 }
+      { error: response.error },
+      { status: response.status ?? 400 }
     );
   }
 
-  return NextResponse.json(result);
+  return NextResponse.json(response);
 }

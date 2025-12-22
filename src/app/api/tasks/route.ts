@@ -7,11 +7,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const data = await request.json();
-  const result = taskService.create(data);
+  const response = taskService.create(data);
 
-  if ('error' in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+  if ('error' in response) {
+    return NextResponse.json({ error: response.error }, { status: 400 });
   }
 
-  return NextResponse.json(result, { status: 201 });
+  return NextResponse.json(response, { status: 201 });
 }
