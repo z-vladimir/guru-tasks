@@ -1,4 +1,6 @@
-import { API_ROUTES } from '@/shared/api';
+import { httpClient } from '@/shared/lib/httpClient';
+import { TASK_API_ROUTES } from './routes';
+
 import type {
   GetTasksResponse,
   CreateTaskRequest,
@@ -10,36 +12,36 @@ import type {
 
 export const taskApi = {
   async getAll(): Promise<GetTasksResponse> {
-    const res = await fetch(API_ROUTES.TASKS, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch tasks');
+    const res = await httpClient(TASK_API_ROUTES.TASKS, {
+      cache: 'no-store',
+    });
+
     return res.json();
   },
   async create(data: CreateTaskRequest): Promise<CreateTaskResponse> {
-    const res = await fetch(API_ROUTES.TASKS, {
+    const res = await httpClient(TASK_API_ROUTES.TASKS, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    if (!res.ok) throw new Error('Failed to create task');
+
     return res.json();
   },
   async update(
     id: string,
     data: UpdateTaskRequest
   ): Promise<UpdateTaskResponse> {
-    const res = await fetch(API_ROUTES.TASK(id), {
+    const res = await httpClient(TASK_API_ROUTES.TASK(id), {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    if (!res.ok) throw new Error('Failed to update task');
+
     return res.json();
   },
   async delete(id: string): Promise<DeleteTaskResponse> {
-    const res = await fetch(API_ROUTES.TASK(id), {
+    const res = await httpClient(TASK_API_ROUTES.TASK(id), {
       method: 'DELETE',
     });
-    if (!res.ok) throw new Error('Failed to delete task');
+
     return res.json();
   },
 };
