@@ -5,14 +5,14 @@ import {
 } from '@tanstack/react-query';
 
 import { TaskBoard } from '@/widgets/TaskBoard';
-import { taskApi, TASKS_QUERY_KEY } from '@/entities/task';
+import { TASKS_QUERY_KEY, taskService } from '@/entities/task';
 
 export default async function Home() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: TASKS_QUERY_KEY,
-    queryFn: taskApi.getAll,
+    queryFn: taskService.getAll,
   });
 
   const dehydrated = dehydrate(queryClient);

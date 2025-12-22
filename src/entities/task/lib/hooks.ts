@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { QueryKey } from '@tanstack/react-query';
 
 import { taskApi } from '@/entities/task';
 import type { Task } from '@/entities/task';
@@ -26,8 +25,13 @@ export const useCreateTask = () => {
 
   return useMutation<CreateTaskResponse, Error, CreateTaskRequest>({
     mutationFn: (task: CreateTaskRequest) => taskApi.create(task),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
+    onSuccess: (task) => {
+      // queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
+      queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) => [
+        task,
+        ...oldTasks,
+      ]);
+    },
   });
 };
 
@@ -41,8 +45,14 @@ export const useUpdateTask = () => {
   >({
     mutationFn: ({ id, task }: { id: string; task: UpdateTaskRequest }) =>
       taskApi.update(id, task),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
+    onSuccess: (updatedTask) => {
+      // queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
+      queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) =>
+        oldTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        )
+      );
+    },
   });
 };
 
@@ -51,7 +61,11 @@ export const useDeleteTask = () => {
 
   return useMutation<DeleteTaskResponse, Error, string>({
     mutationFn: (id: string) => taskApi.delete(id),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
+    onSuccess: (deletedTask) => {
+      // queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
+      queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) =>
+        oldTasks.filter((task) => task.id !== deletedTask.id)
+      );
+    },
   });
 };
