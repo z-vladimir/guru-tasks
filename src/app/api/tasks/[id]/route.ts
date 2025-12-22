@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { taskService } from '@/entities/task';
+import { HTTP_STATUS } from '@/shared/const';
 
 export async function PUT(
   request: NextRequest,
@@ -12,10 +13,13 @@ export async function PUT(
   const response = taskService.update(id, data);
 
   if ('error' in response) {
-    return NextResponse.json({ error: response.error }, { status: 404 });
+    return NextResponse.json(
+      { error: response.error },
+      { status: response.status }
+    );
   }
 
-  return NextResponse.json(response);
+  return NextResponse.json(response, { status: HTTP_STATUS.OK });
 }
 
 export async function DELETE(
@@ -29,9 +33,9 @@ export async function DELETE(
   if ('error' in response) {
     return NextResponse.json(
       { error: response.error },
-      { status: response.status ?? 400 }
+      { status: response.status }
     );
   }
 
-  return NextResponse.json(response);
+  return NextResponse.json(response, { status: HTTP_STATUS.OK });
 }

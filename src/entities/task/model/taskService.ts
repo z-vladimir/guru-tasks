@@ -9,9 +9,11 @@ export const taskService = {
   getById: (id: string): Task | undefined =>
     tasks.find((task) => task.id === id),
   create: (task: Omit<Task, 'id' | 'status'>): Task | TaskServiceError => {
-    const isKeyUnique = tasks.some((task) => task.key === task.key);
+    const isDuplicateKey = tasks.some(
+      (storedTask) => storedTask.key === task.key
+    );
 
-    if (!isKeyUnique) {
+    if (isDuplicateKey) {
       return {
         error: ERROR_MESSAGES.KEY_NOT_UNIQUE,
         status: HTTP_STATUS.BAD_REQUEST,

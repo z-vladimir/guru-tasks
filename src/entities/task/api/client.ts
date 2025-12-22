@@ -12,36 +12,36 @@ import type {
 
 export const taskApi = {
   async getAll(): Promise<GetTasksResponse> {
-    const res = await httpClient(TASK_API_ROUTES.TASKS, {
+    const response = await httpClient(TASK_API_ROUTES.TASKS, {
       cache: 'no-store',
     });
 
-    return res.json();
+    return response.json();
   },
   async create(data: CreateTaskRequest): Promise<CreateTaskResponse> {
-    const res = await httpClient(TASK_API_ROUTES.TASKS, {
+    const response = await httpClient(TASK_API_ROUTES.TASKS, {
       method: 'POST',
       body: JSON.stringify(data),
     });
 
-    return res.json();
+    return response.json();
   },
   async update(
     id: string,
     data: UpdateTaskRequest
   ): Promise<UpdateTaskResponse> {
-    const res = await httpClient(TASK_API_ROUTES.TASK(id), {
+    const response = await httpClient(TASK_API_ROUTES.TASK(id), {
       method: 'PUT',
       body: JSON.stringify(data),
     });
 
-    return res.json();
+    return response.json();
   },
   async delete(id: string): Promise<DeleteTaskResponse> {
-    const res = await httpClient(TASK_API_ROUTES.TASK(id), {
+    const response = await httpClient(TASK_API_ROUTES.TASK(id), {
       method: 'DELETE',
     });
 
-    return res.json();
+    return response.json();
   },
 };

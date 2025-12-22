@@ -4,7 +4,7 @@ export async function httpClient(
   path: string,
   initRequest?: RequestInit
 ): Promise<Response> {
-  const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
   const url = `${BASE_URL}${path}`;
 
