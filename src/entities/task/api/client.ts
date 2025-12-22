@@ -1,4 +1,4 @@
-import { httpClient } from '@/shared/lib/httpClient';
+import { httpClient } from '@/shared/lib';
 import { TASK_API_ROUTES } from './routes';
 
 import type {

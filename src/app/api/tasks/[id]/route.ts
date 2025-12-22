@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { taskService } from '@/entities/task';
 
 export async function PUT(
