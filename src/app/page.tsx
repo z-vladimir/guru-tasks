@@ -18,7 +18,7 @@ export default async function Home() {
   const dehydrated = dehydrate(queryClient);
 
   return (
-    <div className="font-sans min-h-screen p-8 sm:p-20">
+    <div className="min-h-screen p-8 sm:p-20">
       <HydrationBoundary state={dehydrated}>
         <TaskBoard />
       </HydrationBoundary>
