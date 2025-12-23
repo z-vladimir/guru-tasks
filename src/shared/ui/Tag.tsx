@@ -7,7 +7,7 @@ interface TagProps extends PropsWithChildren {
   className?: string;
 }
 
-export const Tag = ({ color = 'success', className, children }: TagProps) => {
+export const Tag = ({ color = 'secondary', className, children }: TagProps) => {
   return (
     <p
       className={cn(

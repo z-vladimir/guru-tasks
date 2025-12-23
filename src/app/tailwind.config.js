@@ -91,7 +91,7 @@ const config = {
         },
         borderWidth: {
           small: '1px',
-          medium: '1px',
+          medium: '1.5px',
           large: '2px',
         },
       },
@@ -124,7 +124,7 @@ const config = {
             },
             borderWidth: {
               small: '1px',
-              medium: '1px',
+              medium: '1.5px',
               large: '2px',
             },
           },

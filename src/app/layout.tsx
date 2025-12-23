@@ -25,7 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.className} antialiased`}>
+      <body
+        className={`${dmSans.className} antialiased bg-primary-400 text-primary-900`}
+      >
         <RootProvider>{children}</RootProvider>
       </body>
     </html>
