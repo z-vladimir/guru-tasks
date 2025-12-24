@@ -31,6 +31,7 @@ export const Button = ({
             variant === 'primary',
           'text-primary-100 bg-primary-600': variant === 'secondary',
           'text-danger': variant === 'danger',
+          'bg-primary-600 opacity-100 cursor-not-allowed': isDisabled,
         },
         className
       )}

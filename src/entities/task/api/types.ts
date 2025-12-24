@@ -1,11 +1,12 @@
 import { Task } from '@/entities/task';
+import type { TaskFormValues } from '../model/taskFormSchema';
 
 export interface GetTasksResponse extends Array<Task> {}
 
-export interface CreateTaskRequest extends Omit<Task, 'id' | 'status'> {}
+export type CreateTaskRequest = TaskFormValues;
 export interface CreateTaskResponse extends Task {}
 
-export interface UpdateTaskRequest extends Partial<Omit<Task, 'id'>> {}
+export type UpdateTaskRequest = Partial<TaskFormValues>;
 export interface UpdateTaskResponse extends Task {}
 
 export interface DeleteTaskResponse extends Task {}

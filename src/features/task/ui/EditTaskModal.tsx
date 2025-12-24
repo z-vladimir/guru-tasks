@@ -20,13 +20,13 @@ export const EditTaskModal = ({ task, open, onClose }: EditTaskModalProps) => {
   return (
     <Modal open={open} onClose={onClose} title={`Edit: ${task.name}`}>
       <TaskForm
+        isEdit
         defaultValues={task}
-        isLoading={updateTask.isPending}
         onSubmit={async (data) => {
           await updateTask.mutateAsync({ id: task.id, task: data });
           onClose();
         }}
-        renderFooter={() => (
+        renderFooter={({ isValid }) => (
           <div className="flex justify-end gap-4">
             <Button
               variant="danger"
@@ -40,6 +40,7 @@ export const EditTaskModal = ({ task, open, onClose }: EditTaskModalProps) => {
               type="submit"
               variant="primary"
               isLoading={updateTask.isPending}
+              isDisabled={!isValid}
             >
               Update
             </Button>

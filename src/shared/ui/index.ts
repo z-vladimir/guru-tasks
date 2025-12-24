@@ -1,5 +1,6 @@
+export { Tag } from './Tag';
+export { Chip } from './Chip';
+export { Modal } from './Modal';
 export { Button } from './Button';
 export { CloseButton } from './CloseButton';
-export { Chip } from './Chip';
-export { Tag } from './Tag';
-export { Modal } from './Modal';
+export { SelectValue } from './SelectValue';

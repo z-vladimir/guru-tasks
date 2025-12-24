@@ -6,6 +6,7 @@ import {
   ModalBody,
   ModalFooter,
 } from '@heroui/modal';
+
 import { CloseButton } from './CloseButton';
 
 interface ModalProps extends PropsWithChildren {
@@ -27,7 +28,7 @@ export const Modal = ({
     onClose={onClose}
     hideCloseButton
     classNames={{
-      base: 'flex flex-col gap-8 rounded-xl bg-primary-400 p-6',
+      base: 'max-w-[480px] flex flex-col gap-8 rounded-xl bg-primary-400 p-6',
       backdrop: 'bg-[#000000]/80',
       header: 'bortext-xl font-bold leading-base tracking-md py-[9px] px-0 ',
       footer: 'p-0',

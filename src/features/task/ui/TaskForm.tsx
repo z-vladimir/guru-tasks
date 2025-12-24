@@ -1,41 +1,64 @@
-import { z } from 'zod';
 import { ReactNode } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FormState } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Textarea } from '@heroui/input';
 import { Select, SelectItem } from '@heroui/select';
 
-import { STATUSES, LABELS } from '@/entities/task';
-
-const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  key: z.string().min(1, 'Key is required'),
-  description: z.string().optional(),
-  labels: z.array(z.enum(LABELS)).optional(),
-  status: z.enum(STATUSES),
-});
-
-type FormValues = z.infer<typeof schema>;
+import {
+  STATUSES,
+  LABELS,
+  taskFormSchema,
+  TaskFormValues,
+  getStatusText,
+} from '@/entities/task';
+import { SelectValue } from '@/shared/ui';
 
 interface TaskFormProps {
-  isLoading?: boolean;
-  defaultValues?: Partial<FormValues>;
-  onSubmit: (data: FormValues) => void;
-  renderFooter?: () => ReactNode;
+  defaultValues?: Partial<TaskFormValues>;
+  onSubmit: (data: TaskFormValues) => void;
+  isEdit?: boolean;
+  renderFooter?: ({
+    isValid,
+  }: Pick<FormState<TaskFormValues>, 'isValid'>) => ReactNode;
 }
+
+const inputClassNames = {
+  label: 'text-sm font-medium leading-md pb-1',
+  input: 'text-sm leading-md tracking-sm placeholder:text-primary-700',
+  inputWrapper: 'min-h-9 h-9 rounded-sm shadow-none bg-primary-100 px-4 py-2',
+};
+
+const selectClassNames = {
+  classNames: {
+    label: inputClassNames.label,
+    trigger: inputClassNames.inputWrapper,
+    value: 'text-sm leading-md tracking-sm capitalize',
+    popoverContent: 'rounded-sm p-4',
+    listboxWrapper: 'p-0',
+    listbox: 'p-0',
+  },
+  listboxProps: {
+    itemClasses: {
+      base: 'rounded-xs',
+      title: 'text-sm font-regular leading-md capitalize',
+      selectedIcon: 'text-primary-900',
+    },
+  },
+};
 
 export const TaskForm = ({
   onSubmit,
   defaultValues,
+  isEdit = false,
   renderFooter = () => null,
 }: TaskFormProps) => {
   const {
     control,
-    register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    formState: { errors, isValid },
+  } = useForm<TaskFormValues>({
+    resolver: zodResolver(taskFormSchema),
+    mode: 'onSubmit',
     defaultValues: {
       name: '',
       key: '',
@@ -57,11 +80,13 @@ export const TaskForm = ({
         control={control}
         render={({ field }) => (
           <Input
-            labelPlacement="outside"
-            label="Name"
             {...field}
+            label="Task Name"
+            labelPlacement="outside-top"
+            placeholder="e.g. SEO meta tags"
             isInvalid={!!errors.name}
             errorMessage={errors.name?.message}
+            classNames={inputClassNames}
             fullWidth
           />
         )}
@@ -71,11 +96,13 @@ export const TaskForm = ({
         control={control}
         render={({ field }) => (
           <Input
-            labelPlacement="outside"
-            label="Key"
             {...field}
+            label="Task Key"
+            labelPlacement="outside-top"
+            placeholder="e.g. TASK-005"
             isInvalid={!!errors.key}
             errorMessage={errors.key?.message}
+            classNames={inputClassNames}
             fullWidth
           />
         )}
@@ -85,11 +112,14 @@ export const TaskForm = ({
         control={control}
         render={({ field }) => (
           <Textarea
-            labelPlacement="outside"
-            label="Description"
             {...field}
-            minRows={3}
-            maxRows={8}
+            label="Description"
+            labelPlacement="outside-top"
+            placeholder="Task Description"
+            minRows={4}
+            classNames={{
+              ...inputClassNames,
+            }}
             fullWidth
           />
         )}
@@ -99,15 +129,24 @@ export const TaskForm = ({
         <Controller
           name="labels"
           control={control}
-          render={({ field }) => (
+          render={({ field: { value, onChange } }) => (
             <Select
-              labelPlacement="outside"
               label="Labels"
+              labelPlacement="outside-top"
+              placeholder="Choose Label"
               selectionMode="multiple"
-              selectedKeys={field.value || []}
-              onSelectionChange={field.onChange}
-              placeholder="Select labels"
+              selectedKeys={value || []}
+              onSelectionChange={(keys) => onChange(Array.from(keys))}
               fullWidth
+              renderValue={(items) => (
+                <SelectValue
+                  items={items}
+                  value={value || []}
+                  onChange={onChange}
+                  count={isEdit ? 2 : 5}
+                />
+              )}
+              {...selectClassNames}
             >
               {LABELS.map((label) => (
                 <SelectItem key={label}>{label}</SelectItem>
@@ -115,30 +154,37 @@ export const TaskForm = ({
             </Select>
           )}
         />
-        <Controller
-          name="status"
-          control={control}
-          render={({ field }) => (
-            <Select
-              labelPlacement="outside"
-              label="Status"
-              selectedKeys={field.value ? new Set([field.value]) : new Set()}
-              onSelectionChange={(keys) => {
-                const value = Array.from(keys)[0] as string;
-                field.onChange(value);
-              }}
-              placeholder="Select status"
-              fullWidth
-            >
-              {STATUSES.map((status) => (
-                <SelectItem key={status}>{status}</SelectItem>
-              ))}
-            </Select>
-          )}
-        />
+
+        {isEdit && (
+          <Controller
+            name="status"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                label="Task Status"
+                labelPlacement="outside-top"
+                selectedKeys={value ? new Set([value]) : new Set()}
+                onSelectionChange={(keys) => onChange(Array.from(keys)[0])}
+                placeholder="Choose Status"
+                fullWidth
+                {...selectClassNames}
+              >
+                {STATUSES.map((status) => (
+                  <SelectItem key={status}>{getStatusText(status)}</SelectItem>
+                ))}
+              </Select>
+            )}
+          />
+        )}
       </div>
 
-      {renderFooter && <div className="mt-6">{renderFooter()}</div>}
+      {renderFooter && (
+        <div className="mt-6">
+          {renderFooter({
+            isValid,
+          })}
+        </div>
+      )}
     </form>
   );
 };
