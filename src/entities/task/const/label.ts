@@ -5,4 +5,3 @@ export const LABELS = [
   'feature',
   'urgent',
 ] as const;
-export type Label = (typeof LABELS)[number];

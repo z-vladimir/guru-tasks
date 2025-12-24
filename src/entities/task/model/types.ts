@@ -1,4 +1,7 @@
-import { Status, Label } from '@/shared/const';
+import { LABELS, STATUSES } from '../const';
+
+type Label = (typeof LABELS)[number];
+type Status = (typeof STATUSES)[number];
 
 export interface Task {
   id: string;

@@ -2,15 +2,16 @@ import { Divider } from '@heroui/divider';
 
 import { Tag } from '@/shared/ui';
 import { Task } from '../model';
+import { getStatusText } from '../lib';
 
-interface TaskComponentProps {
+interface TaskItemProps {
   task: Task;
 }
 
-export const TaskComponent = ({ task }: TaskComponentProps) => {
+export const TaskItem = ({ task }: TaskItemProps) => {
   return (
     <article className="bg-primary-100 rounded-md p-4">
-      <Tag color="success">{task.status}</Tag>
+      <Tag variant={task.status}>{getStatusText(task.status)}</Tag>
       <h4 className="text-md font-bold mt-3">{task.name}</h4>
       <p className="text-sm leading-md tracking-sm text-primary-600 mt-1">
         {task.key}
@@ -25,7 +26,7 @@ export const TaskComponent = ({ task }: TaskComponentProps) => {
         {task.labels?.map((label) => (
           <Tag
             key={label}
-            color="secondary"
+            variant="backlog"
             className="font-semibold rounded-xs"
           >
             {label}

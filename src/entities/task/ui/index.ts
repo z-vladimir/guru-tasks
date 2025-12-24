@@ -1,1 +1,1 @@
-export { TaskComponent } from './TaskComponent';
+export { TaskItem } from './TaskItem';

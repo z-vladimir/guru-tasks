@@ -18,10 +18,10 @@ export default async function Home() {
   const dehydrated = dehydrate(queryClient);
 
   return (
-    <div className="min-h-screen max-w-[1164px] mx-auto py-8 px-5 xl:px-0 xl:py-20 ">
-      <HydrationBoundary state={dehydrated}>
+    <HydrationBoundary state={dehydrated}>
+      <main className="min-h-screen max-w-[1164px] mx-auto py-8 px-5 xl:px-0 xl:py-20 ">
         <TaskBoard />
-      </HydrationBoundary>
-    </div>
+      </main>
+    </HydrationBoundary>
   );
 }

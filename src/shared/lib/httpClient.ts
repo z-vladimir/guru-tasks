@@ -1,4 +1,4 @@
-import { handleApiError } from '../utils';
+import { handleApiError } from './handleApiError';
 
 export async function httpClient(
   path: string,

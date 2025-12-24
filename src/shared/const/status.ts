@@ -1,6 +1,3 @@
-export const STATUSES = ['backlog', 'in_progress', 'done'] as const;
-export type Status = (typeof STATUSES)[number];
-
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,
