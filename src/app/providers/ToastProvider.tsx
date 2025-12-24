@@ -6,7 +6,7 @@ export const ToastProvider = () => {
       toastProps={{
         variant: 'flat',
         classNames: {
-          base: 'rounded-sm',
+          base: 'rounded-sm border-none',
         },
       }}
     />

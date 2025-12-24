@@ -37,12 +37,14 @@ Jira-style Task Board (Next.js + TypeScript + Tailwind)
 - All operations (create, edit, delete) go through the server
 - Toast notifications for success/error
 - Client-side form validation
+- **Optimistic updates** for all CRUD operations: UI updates instantly, then syncs with server (rollback on error)
 
 ## Decisions
 
 - **HeroUI** chosen for UI, modals, and toasts — modern, fast, easily customizable
-- **TanStack Query** for task synchronization and global state
+- **TanStack Query** for task synchronization, global state, and optimistic updates (instant UI feedback)
 - **FSD** for scalability and clean structure
 - **Validation** via Zod and React Hook Form — flexible and type-safe
 - **Errors** are always returned from the server as JSON `{ error: string }`
 - **SSR** for initial task loading (SEO & fast start)
+- **Optimistic updates**: all create, update, and delete actions are reflected in the UI immediately, with rollback on error
