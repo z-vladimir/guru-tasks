@@ -4,20 +4,26 @@ import { Button as HeroUIButton } from '@heroui/button';
 import { cn } from '@/shared/lib';
 
 interface ButtonProps extends PropsWithChildren {
+  type?: 'button' | 'submit' | 'reset';
   variant?: 'primary' | 'secondary' | 'danger';
   className?: string;
+  isLoading?: boolean;
+  isDisabled?: boolean;
   onClick?: () => void;
 }
 
 export const Button = ({
+  type = 'button',
   variant,
-  className = '',
   children,
+  className = '',
   onClick = () => {},
-  ...rest
+  isLoading = false,
+  isDisabled = false,
 }: ButtonProps) => {
   return (
     <HeroUIButton
+      type={type}
       className={cn(
         'text-sm leading-lg text-primary-900 bg-transparent rounded-2xl h-9 py-3 px-4',
         {
@@ -29,7 +35,8 @@ export const Button = ({
         className
       )}
       onPress={onClick}
-      {...rest}
+      isLoading={isLoading}
+      isDisabled={isDisabled}
     >
       {children}
     </HeroUIButton>
