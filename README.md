@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Guru Tasks
+
+Jira-style Task Board (Next.js + TypeScript + Tailwind)
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```sh
+   npm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Start the dev server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```sh
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- TanStack Query (global state)
+- HeroUI (UI, modals, toasts)
+- React Hook Form + Zod (form validation)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture & Principles
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- FSD (Feature-Sliced Design):
+  - entities, features, shared, widgets, app
+- SSR for initial task loading
+- CRUD via Next.js API routes
+- In-memory store (data is lost after server restart)
+- All operations (create, edit, delete) go through the server
+- Toast notifications for success/error
+- Client-side form validation
 
-## Deploy on Vercel
+## Decisions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **HeroUI** chosen for UI, modals, and toasts — modern, fast, easily customizable
+- **TanStack Query** for task synchronization and global state
+- **FSD** for scalability and clean structure
+- **Validation** via Zod and React Hook Form — flexible and type-safe
+- **Errors** are always returned from the server as JSON `{ error: string }`
+- **SSR** for initial task loading (SEO & fast start)
