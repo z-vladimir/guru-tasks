@@ -10,6 +10,8 @@ import { TASKS_QUERY_KEY, taskService } from '@/entities/task';
 export default async function Home() {
   const queryClient = new QueryClient();
 
+  taskService.reset();
+
   await queryClient.prefetchQuery({
     queryKey: TASKS_QUERY_KEY,
     queryFn: taskService.getAll,

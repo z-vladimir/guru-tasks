@@ -20,19 +20,23 @@ export const TaskItem = ({ task }: TaskItemProps) => {
         {task.description}
       </p>
 
-      <Divider className="bg-primary-300 my-5" />
+      {task.labels?.length > 0 && (
+        <>
+          <Divider className="bg-primary-300 my-5" />
 
-      <div className="flex flex-wrap gap-1">
-        {task.labels?.map((label) => (
-          <Tag
-            key={label}
-            variant="backlog"
-            className="font-semibold rounded-xs"
-          >
-            {label}
-          </Tag>
-        ))}
-      </div>
+          <div className="flex flex-wrap gap-1">
+            {task.labels?.map((label) => (
+              <Tag
+                key={label}
+                variant="backlog"
+                className="font-semibold rounded-xs"
+              >
+                {label}
+              </Tag>
+            ))}
+          </div>
+        </>
+      )}
     </article>
   );
 };
