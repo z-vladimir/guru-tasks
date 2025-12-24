@@ -1,8 +1,10 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { addToast } from '@heroui/toast';
 
 import { taskApi } from '@/entities/task';
+import { getErrorMessage } from '@/shared/lib';
 import type { Task } from '@/entities/task';
 import type {
   CreateTaskRequest,
@@ -26,11 +28,22 @@ export const useCreateTask = () => {
   return useMutation<CreateTaskResponse, Error, CreateTaskRequest>({
     mutationFn: (task: CreateTaskRequest) => taskApi.create(task),
     onSuccess: (task) => {
-      // queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
       queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) => [
         task,
         ...oldTasks,
       ]);
+      addToast({
+        title: 'Task has been created',
+        description: `"${task.name}" successfully created!`,
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Creation error',
+        description: getErrorMessage(error),
+        color: 'danger',
+      });
     },
   });
 };
@@ -46,12 +59,23 @@ export const useUpdateTask = () => {
     mutationFn: ({ id, task }: { id: string; task: UpdateTaskRequest }) =>
       taskApi.update(id, task),
     onSuccess: (updatedTask) => {
-      // queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
       queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) =>
         oldTasks.map((task) =>
           task.id === updatedTask.id ? updatedTask : task
         )
       );
+      addToast({
+        title: 'Task has been updated',
+        description: `"${updatedTask.name}" successfully updated!`,
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Update error',
+        description: getErrorMessage(error),
+        color: 'danger',
+      });
     },
   });
 };
@@ -62,10 +86,21 @@ export const useDeleteTask = () => {
   return useMutation<DeleteTaskResponse, Error, string>({
     mutationFn: (id: string) => taskApi.delete(id),
     onSuccess: (deletedTask) => {
-      // queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY as QueryKey }),
       queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) =>
         oldTasks.filter((task) => task.id !== deletedTask.id)
       );
+      addToast({
+        title: 'Task has been deleted',
+        description: `"${deletedTask.name}" successfully deleted!`,
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Delete error',
+        description: getErrorMessage(error),
+        color: 'danger',
+      });
     },
   });
 };

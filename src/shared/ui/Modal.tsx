@@ -27,6 +27,7 @@ export const Modal = ({
     isOpen={open}
     onClose={onClose}
     hideCloseButton
+    placement="center"
     classNames={{
       base: 'max-w-[480px] flex flex-col gap-8 rounded-xl bg-primary-400 p-6',
       backdrop: 'bg-[#000000]/80',
