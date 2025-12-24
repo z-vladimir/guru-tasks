@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { Task, TaskItem } from '@/entities/task';
 import { EditTaskModal } from './EditTaskModal';
 
@@ -7,7 +8,7 @@ interface EditTaskProps {
 }
 
 export const EditTask = ({ tasks }: EditTaskProps) => {
-  const [selected, setSelected] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [open, setOpen] = useState(false);
 
   return (
@@ -23,7 +24,7 @@ export const EditTask = ({ tasks }: EditTaskProps) => {
               key={task.id}
               className="rounded-md hover:shadow-md transition cursor-pointer"
               onClick={() => {
-                setSelected(task);
+                setSelectedTask(task);
                 setOpen(true);
               }}
             >
@@ -32,10 +33,10 @@ export const EditTask = ({ tasks }: EditTaskProps) => {
           ))
         )}
       </ul>
-      {selected && (
+      {selectedTask && (
         <EditTaskModal
-          task={selected}
           open={open}
+          task={selectedTask}
           onClose={() => setOpen(false)}
         />
       )}

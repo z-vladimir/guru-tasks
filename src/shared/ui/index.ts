@@ -4,3 +4,4 @@ export { Modal } from './Modal';
 export { Button } from './Button';
 export { CloseButton } from './CloseButton';
 export { SelectValue } from './SelectValue';
+export { ModalConfirm } from './ModalConfirm';
