@@ -1,14 +1,11 @@
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from '@tanstack/react-query';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import { TaskBoard } from '@/widgets/TaskBoard';
 import { TASKS_QUERY_KEY, taskService } from '@/entities/task';
+import { getQueryClient } from '@/shared/lib';
 
 export default async function Home() {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
 
   taskService.reset();
 
