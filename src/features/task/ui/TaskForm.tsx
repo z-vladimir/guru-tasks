@@ -17,7 +17,7 @@ interface TaskFormProps {
   defaultValues?: Partial<TaskFormValues>;
   onSubmit: (data: TaskFormValues) => void;
   isEdit?: boolean;
-  renderFooter?: ({
+  renderActions?: ({
     isValid,
   }: Pick<FormState<TaskFormValues>, 'isValid'>) => ReactNode;
 }
@@ -50,7 +50,7 @@ export const TaskForm = ({
   onSubmit,
   defaultValues,
   isEdit = false,
-  renderFooter = () => null,
+  renderActions = () => null,
 }: TaskFormProps) => {
   const {
     control,
@@ -178,9 +178,9 @@ export const TaskForm = ({
         )}
       </div>
 
-      {renderFooter && (
+      {renderActions && (
         <div className="mt-6">
-          {renderFooter({
+          {renderActions({
             isValid,
           })}
         </div>

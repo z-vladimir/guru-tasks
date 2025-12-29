@@ -1,10 +1,9 @@
 import { PropsWithChildren } from 'react';
 
-import { Task } from '@/entities/task';
 import { cn } from '../lib';
 
 interface TagProps extends PropsWithChildren {
-  variant?: Task['status'];
+  variant?: 'backlog' | 'in_progress' | 'done';
   className?: string;
 }
 

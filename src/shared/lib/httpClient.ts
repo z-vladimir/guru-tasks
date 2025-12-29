@@ -14,6 +14,7 @@ export async function httpClient(
     ...defaultHeaders,
     ...(initRequest?.headers || {}),
   };
+
   try {
     const response = await fetch(url, { ...initRequest, headers });
 

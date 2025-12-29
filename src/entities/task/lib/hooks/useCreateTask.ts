@@ -3,9 +3,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addToast } from '@heroui/toast';
 
-import { taskApi } from '@/entities/task';
+import { Task, taskApi } from '@/entities/task';
 import { getErrorMessage } from '@/shared/lib';
-import type { Task } from '@/entities/task';
 import type { CreateTaskRequest, CreateTaskResponse } from '../../api';
 import { TASKS_QUERY_KEY } from '../../const';
 

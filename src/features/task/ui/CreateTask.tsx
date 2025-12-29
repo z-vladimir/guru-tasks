@@ -8,7 +8,7 @@ export const CreateTask = () => {
   const [open, setOpen] = useState(false);
   const { mutateAsync, isPending } = useCreateTask();
 
-  const onSubmit = async (data: CreateTaskRequest) => {
+  const handleCreate = async (data: CreateTaskRequest) => {
     await mutateAsync(data);
     setOpen(false);
   };
@@ -21,8 +21,8 @@ export const CreateTask = () => {
 
       <Modal open={open} onClose={() => setOpen(false)} title="Create Task">
         <TaskForm
-          onSubmit={onSubmit}
-          renderFooter={({ isValid }) => (
+          onSubmit={handleCreate}
+          renderActions={({ isValid }) => (
             <div className="flex justify-end gap-4">
               <Button
                 type="submit"

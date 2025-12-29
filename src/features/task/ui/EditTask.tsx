@@ -33,6 +33,7 @@ export const EditTask = ({ tasks }: EditTaskProps) => {
           ))
         )}
       </ul>
+
       {selectedTask && (
         <EditTaskModal
           open={open}

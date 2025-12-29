@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
-import { Task, useUpdateTask, useDeleteTask } from '@/entities/task';
+import {
+  Task,
+  useUpdateTask,
+  useDeleteTask,
+  UpdateTaskRequest,
+} from '@/entities/task';
 import { Button, Modal } from '@/shared/ui';
 import { ConfirmTaskModal } from './ConfirmTaskModal';
 import { TaskForm } from './TaskForm';
@@ -26,6 +31,11 @@ export const EditTaskModal = ({ task, open, onClose }: EditTaskModalProps) => {
     onClose();
   };
 
+  const handleUpdate = async (data: UpdateTaskRequest) => {
+    await updateTask.mutateAsync({ id: task.id, task: data });
+    onClose();
+  };
+
   const showEdit = open && !confirmOpen;
 
   return (
@@ -34,11 +44,8 @@ export const EditTaskModal = ({ task, open, onClose }: EditTaskModalProps) => {
         <TaskForm
           isEdit
           defaultValues={task}
-          onSubmit={async (data) => {
-            await updateTask.mutateAsync({ id: task.id, task: data });
-            onClose();
-          }}
-          renderFooter={({ isValid }) => (
+          onSubmit={handleUpdate}
+          renderActions={({ isValid }) => (
             <div className="flex justify-end gap-4">
               <Button
                 variant="danger"
