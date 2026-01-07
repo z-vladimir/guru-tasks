@@ -3,10 +3,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addToast } from '@heroui/toast';
 
-import { Task, taskApi } from '@/entities/task';
 import { getErrorMessage } from '@/shared/lib';
-import type { CreateTaskRequest, CreateTaskResponse } from '../../api';
+import {
+  taskApi,
+  type CreateTaskRequest,
+  type CreateTaskResponse,
+} from '../../api';
 import { TASKS_QUERY_KEY } from '../../const';
+import { Task } from '../../model';
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();

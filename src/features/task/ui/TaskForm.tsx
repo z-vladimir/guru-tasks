@@ -7,19 +7,19 @@ import { Select, SelectItem } from '@heroui/select';
 import {
   STATUSES,
   LABELS,
-  taskFormSchema,
-  TaskFormValues,
+  taskSchema,
+  TaskValues,
   getStatusText,
 } from '@/entities/task';
 import { SelectValue } from '@/shared/ui';
 
 interface TaskFormProps {
-  defaultValues?: Partial<TaskFormValues>;
-  onSubmit: (data: TaskFormValues) => void;
+  defaultValues?: Partial<TaskValues>;
+  onSubmit: (data: TaskValues) => void;
   isEdit?: boolean;
   renderActions?: ({
     isValid,
-  }: Pick<FormState<TaskFormValues>, 'isValid'>) => ReactNode;
+  }: Pick<FormState<TaskValues>, 'isValid'>) => ReactNode;
 }
 
 const inputClassNames = {
@@ -56,8 +56,8 @@ export const TaskForm = ({
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<TaskFormValues>({
-    resolver: zodResolver(taskFormSchema),
+  } = useForm<TaskValues>({
+    resolver: zodResolver(taskSchema),
     mode: 'onChange',
     defaultValues: {
       name: '',

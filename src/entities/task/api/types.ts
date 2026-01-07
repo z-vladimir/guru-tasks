@@ -1,12 +1,11 @@
-import { Task } from '@/entities/task';
-import type { TaskFormValues } from '../model/taskFormSchema';
+import type { Task, TaskValues } from '../model';
 
 export interface GetTasksResponse extends Array<Task> {}
 
-export type CreateTaskRequest = TaskFormValues;
+export type CreateTaskRequest = TaskValues;
 export interface CreateTaskResponse extends Task {}
 
-export type UpdateTaskRequest = Partial<TaskFormValues>;
+export type UpdateTaskRequest = Partial<TaskValues>;
 export interface UpdateTaskResponse extends Task {}
 
 export interface DeleteTaskResponse extends Task {}

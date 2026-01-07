@@ -1,6 +1,6 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
-import { TaskBoard } from '@/widgets/TaskBoard';
+import { TaskBoard } from '@/widgets/task';
 import { TASKS_QUERY_KEY, taskService } from '@/entities/task';
 import { getQueryClient } from '@/shared/lib';
 

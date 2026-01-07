@@ -1,10 +1,13 @@
 'use client';
 
 import { CreateTask, EditTask } from '@/features/task';
-import { getStatusText, STATUSES, useTasks } from '@/entities/task';
+import { getStatusText, Status, STATUSES, useTasks } from '@/entities/task';
 
 export const TaskBoard = () => {
   const { data: tasks = [] } = useTasks();
+
+  const getFilteredTasks = (status: Status) =>
+    tasks.filter((task) => task.status === status);
 
   return (
     <section className="flex flex-col gap-6">
@@ -20,7 +23,7 @@ export const TaskBoard = () => {
               {getStatusText(status)}
             </h2>
 
-            <EditTask tasks={tasks.filter((task) => task.status === status)} />
+            <EditTask tasks={getFilteredTasks(status)} />
           </div>
         ))}
       </div>
