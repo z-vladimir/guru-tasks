@@ -25,7 +25,7 @@ enum Label {
 
 model Task {
   // id          Int   @id @default(autoincrement())
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   name        String
   key         String   @unique
   description String?
