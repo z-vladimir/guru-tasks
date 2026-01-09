@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { taskService } from '@/entities/task';
+import { taskService } from '@/entities/task/server';
 import { HTTP_STATUS } from '@/shared/const';
 
 export async function PUT(
@@ -10,7 +10,7 @@ export async function PUT(
   const { id } = await context.params;
   const data = await request.json();
 
-  const response = taskService.update(id, data);
+  const response = await taskService.update(id, data);
 
   if ('error' in response) {
     return NextResponse.json(
@@ -28,7 +28,7 @@ export async function DELETE(
 ) {
   const { id } = await context.params;
 
-  const response = taskService.delete(id);
+  const response = await taskService.delete(id);
 
   if ('error' in response) {
     return NextResponse.json(

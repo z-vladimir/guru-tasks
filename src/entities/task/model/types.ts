@@ -7,7 +7,7 @@ export interface Task {
   id: string;
   name: string;
   key: string;
-  description: string;
+  description: string | null;
   status: Status;
   labels: Label[];
 }
