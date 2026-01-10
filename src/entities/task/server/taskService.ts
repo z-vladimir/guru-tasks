@@ -2,7 +2,6 @@ import { Prisma } from '@prisma/client';
 
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/shared/const';
 import { prisma } from '@/shared/server';
-import { parseLabels } from '../lib';
 import { Task, TaskServiceError } from '../model';
 import { CreateTaskRequest } from '../api';
 
@@ -12,10 +11,7 @@ export const taskService = {
       orderBy: { createdAt: 'desc' },
     });
 
-    return tasks.map((task) => ({
-      ...task,
-      labels: parseLabels(task.labels),
-    }));
+    return tasks;
   },
   getById: async (id: string): Promise<Task | undefined> => {
     const task = await prisma.task.findUnique({
@@ -24,26 +20,15 @@ export const taskService = {
 
     if (!task) return undefined;
 
-    return {
-      ...task,
-      labels: parseLabels(task.labels),
-    };
+    return task;
   },
   create: async (task: CreateTaskRequest): Promise<Task | TaskServiceError> => {
     try {
       const newTask = await prisma.task.create({
-        data: {
-          name: task.name,
-          key: task.key,
-          description: task.description,
-          labels: JSON.stringify(task.labels),
-        },
+        data: task,
       });
 
-      return {
-        ...newTask,
-        labels: parseLabels(newTask.labels),
-      };
+      return newTask;
     } catch (error: unknown) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -62,21 +47,12 @@ export const taskService = {
     task: Partial<Task>
   ): Promise<Task | TaskServiceError> => {
     try {
-      const updateData: Record<string, unknown> = { ...task };
-
-      if (task.labels) {
-        updateData.labels = JSON.stringify(task.labels);
-      }
-
       const updatedTask = await prisma.task.update({
         where: { id },
-        data: updateData,
+        data: task,
       });
 
-      return {
-        ...updatedTask,
-        labels: parseLabels(updatedTask.labels),
-      };
+      return updatedTask;
     } catch (error: unknown) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
@@ -86,6 +62,7 @@ export const taskService = {
           };
         }
       }
+
       throw error;
     }
   },
@@ -109,10 +86,7 @@ export const taskService = {
 
       await prisma.task.delete({ where: { id } });
 
-      return {
-        ...task,
-        labels: parseLabels(task.labels),
-      };
+      return task;
     } catch (error: unknown) {
       throw error;
     }

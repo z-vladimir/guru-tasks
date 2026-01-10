@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 enum Status {
@@ -24,13 +24,12 @@ enum Label {
 }
 
 model Task {
-  // id          Int   @id @default(autoincrement())
   id          String   @id @default(uuid())
   name        String
   key         String   @unique
-  description String?
+  description String   @default("")
   status      Status   @default(backlog)
-  labels      Json
+  labels      Label[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

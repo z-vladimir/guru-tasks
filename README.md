@@ -45,9 +45,13 @@ Jira-style Task Board (Next.js + TypeScript + Tailwind)
 - **Prisma ORM** with SQLite for local development
 - Schema: `prisma/schema.prisma`
 - Commands:
-  - `npm run db:push` - Sync schema with database
-  - `npm run db:studio` - Open Prisma Studio to view/edit data
   - `npm run db:generate` - Regenerate client/types
+  - `npm run db:push` - Sync schema with database
+  - `npm run db:seed` - Seed data
+  - `npm run db:studio` - Open Prisma Studio to view/edit data
+  - `npm run db:migrate` - Run migrations
+  - `npm run db:reset` - Reset database
+  - `npm run db:postinstall` - Run `db:generate` and `db:migrate`
 
 ## Server-only API & FSD
 
