@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { taskService } from '@/entities/task/server';
-import { taskSchema } from '@/entities/task';
+import { normalizeTask, taskSchema } from '@/entities/task';
 import { HTTP_STATUS } from '@/shared/const';
 
 export async function GET() {
@@ -21,7 +21,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const response = await taskService.create(parsed.data);
+  const normalized = normalizeTask(parsed.data);
+
+  const response = await taskService.create(normalized);
 
   if ('error' in response) {
     return NextResponse.json(

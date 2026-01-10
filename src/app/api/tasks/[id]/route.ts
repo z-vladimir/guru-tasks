@@ -1,7 +1,8 @@
+import { z } from 'zod';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { taskService } from '@/entities/task/server';
-import { taskSchema } from '@/entities/task';
+import { normalizeTask, taskSchema } from '@/entities/task';
 import { HTTP_STATUS } from '@/shared/const';
 
 export async function PUT(
@@ -9,8 +10,17 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
+  const idParse = z.uuid().safeParse(id);
+
+  if (!idParse.success) {
+    return NextResponse.json(
+      { error: idParse.error.message ?? 'Invalid id' },
+      { status: HTTP_STATUS.BAD_REQUEST }
+    );
+  }
+
   const task = await request.json();
-  const parsed = taskSchema.partial().safeParse(task);
+  const parsed = taskSchema.safeParse(task);
 
   if (!parsed.success) {
     return NextResponse.json(
@@ -19,7 +29,9 @@ export async function PUT(
     );
   }
 
-  const response = await taskService.update(id, parsed.data);
+  const normalized = normalizeTask(parsed.data);
+
+  const response = await taskService.update(id, normalized);
 
   if ('error' in response) {
     return NextResponse.json(
@@ -36,6 +48,14 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
+  const idParse = z.uuid().safeParse(id);
+
+  if (!idParse.success) {
+    return NextResponse.json(
+      { error: idParse.error.message ?? 'Invalid id' },
+      { status: HTTP_STATUS.BAD_REQUEST }
+    );
+  }
 
   const response = await taskService.delete(id);
 
