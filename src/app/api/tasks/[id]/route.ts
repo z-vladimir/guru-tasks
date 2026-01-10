@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { taskService } from '@/entities/task/server';
+import { taskSchema } from '@/entities/task';
 import { HTTP_STATUS } from '@/shared/const';
 
 export async function PUT(
@@ -8,9 +9,17 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
-  const data = await request.json();
+  const task = await request.json();
+  const parsed = taskSchema.partial().safeParse(task);
 
-  const response = await taskService.update(id, data);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.message ?? 'Invalid input' },
+      { status: HTTP_STATUS.BAD_REQUEST }
+    );
+  }
+
+  const response = await taskService.update(id, parsed.data);
 
   if ('error' in response) {
     return NextResponse.json(

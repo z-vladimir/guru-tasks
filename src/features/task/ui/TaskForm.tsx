@@ -8,18 +8,18 @@ import {
   STATUSES,
   LABELS,
   taskSchema,
-  TaskValues,
+  TaskSchema,
   getStatusText,
 } from '@/entities/task';
 import { SelectValue } from '@/shared/ui';
 
 interface TaskFormProps {
-  defaultValues?: Partial<TaskValues>;
-  onSubmit: (data: TaskValues) => void;
+  defaultValues?: Partial<TaskSchema>;
+  onSubmit: (data: TaskSchema) => void;
   isEdit?: boolean;
   renderActions?: ({
     isValid,
-  }: Pick<FormState<TaskValues>, 'isValid'>) => ReactNode;
+  }: Pick<FormState<TaskSchema>, 'isValid'>) => ReactNode;
 }
 
 const inputClassNames = {
@@ -56,7 +56,7 @@ export const TaskForm = ({
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<TaskValues>({
+  } = useForm<TaskSchema>({
     resolver: zodResolver(taskSchema),
     mode: 'onChange',
     defaultValues: {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { taskService } from '@/entities/task/server';
+import { taskSchema } from '@/entities/task';
 import { HTTP_STATUS } from '@/shared/const';
 
 export async function GET() {
@@ -10,8 +11,17 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const data = await request.json();
-  const response = await taskService.create(data);
+  const task = await request.json();
+  const parsed = taskSchema.safeParse(task);
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.message ?? 'Invalid input' },
+      { status: HTTP_STATUS.BAD_REQUEST }
+    );
+  }
+
+  const response = await taskService.create(parsed.data);
 
   if ('error' in response) {
     return NextResponse.json(
