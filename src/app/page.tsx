@@ -1,17 +1,16 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import { TaskBoard } from '@/widgets/task';
-import { TASKS_QUERY_KEY, taskService } from '@/entities/task';
+import { TASKS_QUERY_KEY } from '@/entities/task';
+import { taskService } from '@/entities/task/server';
 import { getQueryClient } from '@/shared/lib';
 
 export default async function Home() {
   const queryClient = getQueryClient();
 
-  taskService.reset();
-
   await queryClient.prefetchQuery({
     queryKey: TASKS_QUERY_KEY,
-    queryFn: taskService.getAll,
+    queryFn: () => taskService.getAll(),
   });
 
   const dehydrated = dehydrate(queryClient);

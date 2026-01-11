@@ -5,6 +5,7 @@ import {
   useUpdateTask,
   useDeleteTask,
   UpdateTaskRequest,
+  normalizeTask,
 } from '@/entities/task';
 import { Button, Modal } from '@/shared/ui';
 import { ConfirmTaskModal } from './ConfirmTaskModal';
@@ -32,7 +33,9 @@ export const EditTaskModal = ({ task, open, onClose }: EditTaskModalProps) => {
   };
 
   const handleUpdate = async (data: UpdateTaskRequest) => {
-    await updateTask.mutateAsync({ id: task.id, task: data });
+    const normalized = normalizeTask(data);
+    await updateTask.mutateAsync({ id: task.id, task: normalized });
+
     onClose();
   };
 

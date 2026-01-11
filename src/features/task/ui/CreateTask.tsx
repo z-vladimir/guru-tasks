@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
-import { CreateTaskRequest, useCreateTask } from '@/entities/task';
+import {
+  CreateTaskRequest,
+  normalizeTask,
+  useCreateTask,
+} from '@/entities/task';
 import { Button, Modal } from '@/shared/ui';
 import { TaskForm } from './TaskForm';
 
@@ -8,8 +12,10 @@ export const CreateTask = () => {
   const [open, setOpen] = useState(false);
   const { mutateAsync, isPending } = useCreateTask();
 
-  const handleCreate = async (data: CreateTaskRequest) => {
-    await mutateAsync(data);
+  const handleCreate = async (task: CreateTaskRequest) => {
+    const normalized = normalizeTask(task);
+    await mutateAsync(normalized);
+
     setOpen(false);
   };
 

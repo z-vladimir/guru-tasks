@@ -1,69 +1,94 @@
-import { HTTP_STATUS, ERROR_MESSAGES } from '@/shared/const';
-import { Task, TaskServiceError } from './types';
-import { mockTasks } from './mockTasks';
+import { Prisma } from '@prisma/client';
 
-let tasks: Task[] = [...mockTasks];
+import { HTTP_STATUS, ERROR_MESSAGES } from '@/shared/const';
+import { prisma } from '@/shared/lib/server';
+import { Task, TaskServiceError } from '../model';
+import { CreateTaskRequest } from '../api';
 
 export const taskService = {
-  getAll: (): Task[] => tasks,
-  getById: (id: string): Task | undefined =>
-    tasks.find((task) => task.id === id),
-  create: (task: Omit<Task, 'id' | 'status'>): Task | TaskServiceError => {
-    const isDuplicateKey = tasks.some(
-      (storedTask) => storedTask.key === task.key
-    );
+  getAll: async (): Promise<Task[]> => {
+    const tasks = await prisma.task.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
 
-    if (isDuplicateKey) {
-      return {
-        error: ERROR_MESSAGES.KEY_NOT_UNIQUE,
-        status: HTTP_STATUS.BAD_REQUEST,
-      };
+    return tasks;
+  },
+  getById: async (id: string): Promise<Task | undefined> => {
+    const task = await prisma.task.findUnique({
+      where: { id },
+    });
+
+    if (!task) return undefined;
+
+    return task;
+  },
+  create: async (task: CreateTaskRequest): Promise<Task | TaskServiceError> => {
+    try {
+      const newTask = await prisma.task.create({
+        data: task,
+      });
+
+      return newTask;
+    } catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          return {
+            error: ERROR_MESSAGES.KEY_NOT_UNIQUE,
+            status: HTTP_STATUS.BAD_REQUEST,
+          };
+        }
+      }
+
+      throw error;
     }
-
-    const newTask: Task = {
-      ...task,
-      id: crypto.randomUUID(),
-      status: 'backlog',
-    };
-
-    tasks = [newTask, ...tasks];
-
-    return newTask;
   },
-  update: (id: string, task: Partial<Task>): Task | TaskServiceError => {
-    const index = tasks.findIndex((task) => task.id === id);
+  update: async (
+    id: string,
+    task: Partial<Task>
+  ): Promise<Task | TaskServiceError> => {
+    try {
+      const updatedTask = await prisma.task.update({
+        where: { id },
+        data: task,
+      });
 
-    if (index === -1)
-      return {
-        error: ERROR_MESSAGES.TASK_NOT_FOUND,
-        status: HTTP_STATUS.NOT_FOUND,
-      };
+      return updatedTask;
+    } catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          return {
+            error: ERROR_MESSAGES.TASK_NOT_FOUND,
+            status: HTTP_STATUS.NOT_FOUND,
+          };
+        }
+      }
 
-    tasks[index] = { ...tasks[index], ...task };
-
-    return tasks[index];
-  },
-  delete: (id: string): Task | TaskServiceError => {
-    const index = tasks.findIndex((task) => task.id === id);
-
-    if (index === -1)
-      return {
-        error: ERROR_MESSAGES.TASK_NOT_FOUND,
-        status: HTTP_STATUS.NOT_FOUND,
-      };
-
-    if (tasks[index].status === 'in_progress') {
-      return {
-        error: ERROR_MESSAGES.CANNOT_DELETE_IN_PROGRESS,
-        status: HTTP_STATUS.CONFLICT,
-      };
+      throw error;
     }
-
-    const [deleted] = tasks.splice(index, 1);
-
-    return deleted;
   },
-  reset: () => {
-    tasks = [...mockTasks];
+  delete: async (id: string): Promise<Task | TaskServiceError> => {
+    try {
+      const task = await prisma.task.findUnique({ where: { id } });
+
+      if (!task) {
+        return {
+          error: ERROR_MESSAGES.TASK_NOT_FOUND,
+          status: HTTP_STATUS.NOT_FOUND,
+        };
+      }
+
+      if (task.status === 'in_progress') {
+        return {
+          error: ERROR_MESSAGES.CANNOT_DELETE_IN_PROGRESS,
+          status: HTTP_STATUS.CONFLICT,
+        };
+      }
+
+      await prisma.task.delete({ where: { id } });
+
+      return task;
+    } catch (error: unknown) {
+      throw error;
+    }
   },
 };
