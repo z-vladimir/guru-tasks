@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/shared/const';
-import { prisma } from '@/shared/server';
+import { prisma } from '@/shared/lib/server';
 import { Task, TaskServiceError } from '../model';
 import { CreateTaskRequest } from '../api';
 
