@@ -4,7 +4,11 @@ const makeQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 0,
+        // Consider server-prefetched data fresh for a short period to avoid
+        // immediate refetch on the client after hydration. Adjust as needed.
+        staleTime: 5 * 60 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
       },
     },
   });

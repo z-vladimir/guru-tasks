@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 import { taskService } from '@/entities/task/server';
 import { normalizeTask, taskSchema } from '@/entities/task';
@@ -31,6 +32,8 @@ export async function POST(request: NextRequest) {
       { status: response.status }
     );
   }
+
+  revalidatePath('/');
 
   return NextResponse.json(response, { status: HTTP_STATUS.CREATED });
 }

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { taskService } from '@/entities/task/server';
@@ -40,6 +41,8 @@ export async function PUT(
     );
   }
 
+  revalidatePath('/');
+
   return NextResponse.json(response, { status: HTTP_STATUS.OK });
 }
 
@@ -65,6 +68,8 @@ export async function DELETE(
       { status: response.status }
     );
   }
+
+  revalidatePath('/');
 
   return NextResponse.json(response, { status: HTTP_STATUS.OK });
 }
