@@ -18,6 +18,10 @@ Jira-style Task Board (Next.js + TypeScript + Tailwind)
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Live Preview
+
+See a deployed preview at: [https://guru-tasks-flame.vercel.app/](https://guru-tasks-flame.vercel.app/)
+
 ## Tech Stack
 
 - Next.js (App Router)
