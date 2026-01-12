@@ -17,7 +17,7 @@ export const useCreateTask = () => {
 
   return useMutation<CreateTaskResponse, Error, CreateTaskRequest>({
     mutationFn: (task: CreateTaskRequest) => taskApi.create(task),
-    onMutate: async (newTask): Promise<{ previousTasks: Task[] }> => {
+    onMutate: async (newTask): Promise<{ previousTasks: Task[]; optimisticId: string }> => {
       await queryClient.cancelQueries({ queryKey: TASKS_QUERY_KEY });
 
       const previousTasks =
@@ -37,7 +37,7 @@ export const useCreateTask = () => {
         ...previousTasks,
       ]);
 
-      return { previousTasks };
+      return { previousTasks, optimisticId: optimisticTask.id };
     },
     onError: (error, _newTask, context) => {
       const ctx = context as { previousTasks?: Task[] } | undefined;
@@ -47,17 +47,21 @@ export const useCreateTask = () => {
         ctx?.previousTasks ?? []
       );
 
+      // If optimistic update failed, refresh from server to guarantee consistency
+      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY });
+
       addToast({
         title: 'Creation error',
         description: getErrorMessage(error),
         color: 'danger',
       });
     },
-    onSuccess: (createdTask) => {
-      queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) => [
-        createdTask,
-        ...oldTasks.filter((task) => task.id !== createdTask.id),
-      ]);
+    onSuccess: (createdTask, _vars, context) => {
+      const ctx = context as { optimisticId?: string } | undefined;
+
+      queryClient.setQueryData<Task[]>(TASKS_QUERY_KEY, (oldTasks = []) =>
+        oldTasks.map((task) => (task.id === ctx?.optimisticId ? createdTask : task))
+      );
 
       addToast({
         title: 'Task has been created',
@@ -65,8 +69,7 @@ export const useCreateTask = () => {
         color: 'success',
       });
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY });
-    },
+    // NOTE: we avoid invalidating onSettled to reduce immediate refetches.
+    // Server state is applied in onSuccess; onError we invalidate to recover.
   });
 };

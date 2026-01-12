@@ -1,4 +1,4 @@
-import { addToast } from '@heroui/react';
+import { addToast } from '@heroui/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getErrorMessage } from '@/shared/lib';
@@ -32,6 +32,9 @@ export const useDeleteTask = () => {
         ctx?.previousTasks ?? []
       );
 
+      // On error, restore previous state and refetch from server
+      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY });
+
       addToast({
         title: 'Delete error',
         description: getErrorMessage(error),
@@ -49,8 +52,6 @@ export const useDeleteTask = () => {
         color: 'success',
       });
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY });
-    },
+    // NOTE: avoid invalidating onSettled to reduce load; reconcile on error only.
   });
 };

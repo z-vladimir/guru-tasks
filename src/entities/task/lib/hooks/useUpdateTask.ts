@@ -1,4 +1,4 @@
-import { addToast } from '@heroui/react';
+import { addToast } from '@heroui/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getErrorMessage } from '@/shared/lib';
@@ -39,6 +39,9 @@ export const useUpdateTask = () => {
         ctx?.previousTasks ?? []
       );
 
+      // On error, refresh tasks from server to ensure consistency
+      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY });
+
       addToast({
         title: 'Update error',
         description: getErrorMessage(error),
@@ -59,8 +62,7 @@ export const useUpdateTask = () => {
       });
     },
 
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY });
-    },
+    // NOTE: avoid invalidating onSettled to reduce load; rely on local updates and
+    // only invalidate on error to reconcile with server state when needed.
   });
 };
