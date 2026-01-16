@@ -1,4 +1,4 @@
 import { createTaskService } from './taskService';
-import { prismaTaskRepository } from './prismaTaskRepository';
+import { prismaTaskAdapter } from './prismaTaskAdapter';
 
-export const taskService = createTaskService(prismaTaskRepository);
+export const taskService = createTaskService(prismaTaskAdapter);

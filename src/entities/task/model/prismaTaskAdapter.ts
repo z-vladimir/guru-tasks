@@ -3,10 +3,10 @@ import { Prisma } from '@prisma/client';
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/shared/const';
 import { prisma } from '@/shared/lib/server';
 import type { Task, TaskServiceError } from './types';
-import type { CreateTaskRequest } from '../api';
 import type { TaskRepository } from './taskRepository';
+import type { CreateTaskRequest } from '../api';
 
-export const prismaTaskRepository: TaskRepository = {
+export const prismaTaskAdapter: TaskRepository = {
   getAll: async (): Promise<Task[]> => {
     const tasks = await prisma.task.findMany({
       orderBy: { createdAt: 'desc' },
@@ -97,5 +97,3 @@ export const prismaTaskRepository: TaskRepository = {
     }
   },
 };
-
-export default prismaTaskRepository;
