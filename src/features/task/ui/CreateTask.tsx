@@ -10,11 +10,11 @@ import { TaskForm } from './TaskForm';
 
 export const CreateTask = () => {
   const [open, setOpen] = useState(false);
-  const { mutateAsync, isPending } = useCreateTask();
+  const { mutate, isPending } = useCreateTask();
 
   const handleCreate = async (task: CreateTaskRequest) => {
     const normalized = normalizeTask(task);
-    await mutateAsync(normalized);
+    mutate(normalized);
 
     setOpen(false);
   };

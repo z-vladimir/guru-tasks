@@ -27,14 +27,15 @@ export const EditTaskModal = ({ task, open, onClose }: EditTaskModalProps) => {
   };
 
   const handleDelete = async () => {
-    await deleteTask.mutateAsync(task.id);
+    deleteTask.mutate(task.id);
+
     setConfirmOpen(false);
     onClose();
   };
 
   const handleUpdate = async (data: UpdateTaskRequest) => {
     const normalized = normalizeTask(data);
-    await updateTask.mutateAsync({ id: task.id, task: normalized });
+    updateTask.mutate({ id: task.id, task: normalized });
 
     onClose();
   };
